@@ -1,0 +1,63 @@
+h1 {
+    text-align: center;
+}
+
+h3, p { 
+    text-align: center;
+}
+
+body { 
+    background-color: bisque;
+    padding: 30px;
+}
+
+svg { 
+    margin-left: auto;
+    margin-right: auto;
+    display : block;
+   
+}
+  
+  /* This controls the Chart Title */
+  text .title{
+    font-size: 16px;
+  }
+  
+  /* This controls the axis text size */
+  .axis text {
+    font-size: 8px;
+  }
+  
+  div {
+      margin-right: auto;
+      margin-left: auto;
+
+  }
+
+  .container, .container2 {
+      display: grid;
+      grid-template-columns: repeat(2, 500px);
+      grid-gap: 10px;
+      justify-content: center;
+  }
+
+  #container-id1, #container-id2, #container2-1, #container2-2 {
+      width: 500px;
+      height: 500px;
+    
+  }
+
+  table, th, td {
+      
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    text-align: center;
+
+  }
+
+  table { 
+      margin-left: auto;
+      margin-right: auto;
+  }
+ 
