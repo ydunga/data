@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "taxshare.css">
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Public debt in India</h1>
+    <p>When a government's expenditure is higher than it's revenue collections, it resorts to market borrowings and other forms of funding. </p>
+    <p>The stock of debt that the government builds up as it funds itself every year is known as the public debt stock. </p>
+    <p>Often, the stock of public debt is measured relative to the GDP of a country. </p>
+    <p>In India, the outstanding public debt/GDP ratio is 89% of GDP. </p>
+    <div id = "debtchart1"></div>
+    <p>The total debt stock is made up of central government and state government borrowings. </p>
+ <p>How the debt/GDP ratio evolves based on : 
+     <br>
+     <br>
+     1. <b>Borrowing needs of the government</b>
+     <br>
+     <br>
+     2. <b>The cost of borrowing</b> i.e the interest paid on outstanding debt
+     <br>
+     <br>
+     3. <b>Ability to service debt</b> - which ultimately depends on the growth rate of the economy and public finances
+ </p>
+
+ <p>The borrowing needs of the government depend on the difference between the revenue and expenditure of the government. </p>
+ <p>Governments borrow from the open market, where financial institutions such as commercial banks and pension funds are major participants. </p>
+ <p>There are three kinds of deficits in government finances : 
+     <br>
+     <br>
+     1. <b>Revenue deficit</b>: a revenue deficit arises when revenue receipts undershoot revenue expenditure. Revenue expenditure is the amount spend on regular activities. It does not include interest payments. 
+     <br>
+     <br>
+     2. <b>Fiscal deficit</b>: a fiscal deficit is the shortfall between total expenditure ( including interest payments) less total receipts (excluding borrowings). The fiscal deficit indicates the amount of borrowing, the government needs to undertake to meet all its expenditure for the year. 
+     <br>
+     <br>
+     3. Finally, a <b>primary deficit</b> is equal to the fiscal deficit less the interest payments to be paid on outstanding debt. 
+ </p>
+
+ <p>For the purpose of studying debt dynamics we can look at fiscal deficits. </p>
+ <h3>How much to borrow</h3>
+ <p>The evolution of the fiscal deficit in India is shown below. </p>
+ <div id = "debtchart2"></div>
+ <p>Periods in which the fiscal deficit is reducing signals that either the government's revenue collections are increasing or they are undertaking fiscal consolidation - i.e cutting back on fiscal spending. </p>
+ <p>Cutting back on public spending can hurt an economy's growth prospects as the government is an essential provider of education, healthcare and infrastructure spending. </p>
+<h3>At what cost?</h3>
+<p>The government raises money for its funding in what is known as the government debt market. Governments are not the only ones who make use of debt funding, corporates also raise money in the corporate debt market. </p>
+<p>In India, most of the debt issued by the government is fixed rate. Debt can also be floating rate, where the amount to be paid as interest can fluctuate according to the terms of lending. </p>
+<p>In many countries, the interest to be paid on government debt can be linked to the exchnage rate or even the inflation rate. </p>
+<p> Below you can see who the major holders of government debt were from 2018-2020.</p>
+<p>You can see that commercial banks, insurance companies and the RBI are large holders of the government debt. </p>
+<button onclick="update(holdings2018)">2018</button>
+<button onclick="update(holdings2019)">2019</button>
+<button onclick="update(holdings2020)">2020</button>
+<div id = "debtchart3"></div>
+<p>The average cost of borrowing from these institutions is shown below. </p>
+<div id = "debtchart4"></div>
+<p>If the cost of borrowing is too high it can lead to a large accumulation of interest payments. </p>
+<p>The average cost of borrowing will depend on many factors. If the government borrows long term funds (+10years), the cost of borrowing will be higher as long term lending rates are usually higher than short term lending rates. </p>
+<p>Long term borrowing is however preferable for the borrower (i.e government) as it helps them put off the prospect of rolling over the debt for long. </p>
+  <h3>Debt sustainability</h3>
+  <p>Whether a sovereign's debt is sustainable or not is determined by whether they can keep meeting their interest payments i.e they do not default. </p>
+  <p>According to the law of motion of debt, debt is sustainable until g > i. What this means is that if the country (national income) is growing (g) at a rate faster than the rate of interest(i) on debt then you can keep meeting your debt obligations and debt is sustainable. </p>
+  <p>If however g < i then debt is said to be on an unsustainble trajectory. </p>
+  <p>If such a scenario were to arise then a sovereign would find that its cost of borrowing will go up by a large margin and they will most likely default on their debt. </p>
+  <p>In case of a sovereign default, countries can also borrow from multilateral organisations like the IMF. </p>
+<p>Below you can see the trends in nominal growth and the nominal interest rate in India. The gap between them is subtantial enough for India to accumulate debt, however if the growth rate were to slow down or the cost of borrowing were to increase it could end up closing this gap. </p>
+<div id = "debtchart5"></div>
+
+    <script>
+var margin = {top: 30, right: 30, bottom: 70, left: 60},
+    width = 500 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+    var svg = d3.select("#debtchart1")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("viewBox", "0 0 500 500")
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("https://raw.githubusercontent.com/ydunga/data/main/publicdebt.csv", function (d) { 
+    return { date : d3.timeParse("%Y")(d.Year), value: d.publicdebt*100}   
+}, 
+
+function(data) { 
+    var x = d3.scaleTime()
+  .domain(d3.extent(data, function(d) { return d.date; }))
+  .range([ 0, width ]);
+svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x));
+
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([60, d3.max(data, function(d) { return +d.value; })])
+  .range([ height, 0 ]); 
+svg.append("g")
+  .call(d3.axisLeft(y));
+
+  svg.append("path")
+  .datum(data)
+  .attr("id", "debtpath")
+  .attr("fill", "none")
+  .attr("stroke", "#90be6d")
+  .attr("stroke-width", 3)
+  .attr("d", d3.line()
+    .x(function(d) { return x(d.date) })
+    .y(function(d) { return y(d.value) })
+    );
+
+svg.append("text")
+.text("Tax % GDP over time")
+.attr("font-style", "italic")
+.attr("x", width/3)
+.attr("y", 0 - (margin.top / 2));
+
+
+
+}
+);
+
+var svg2 = d3.select("#debtchart2")
+.append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("viewBox", "0 0 500 500")
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("https://raw.githubusercontent.com/ydunga/data/main/fiscaldeficit2.csv" ,function(d) {
+    return {Year : d.Year, GDP : d.fiscaldeficit}
+
+},
+
+
+function(data){
+    console.log(data)
+
+    var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(data.map(function(d) { return d.Year; }))
+  .padding(0.2);
+svg2.append("g")
+  .attr("transform", "translate(0," + 0 + ")")
+  .call(d3.axisTop(x).tickValues(["1981", "1986", "1991", "1996", "2001", "2006", "2011", "2016", "2020"]))
+  .selectAll("text") 
+  .attr("transform", "translate(-10,-5)rotate(90)")
+    .style("text-anchor", "end");
+
+      var y = d3.scaleLinear()
+    .domain([-10, 0])
+    .range([ height, 0 ]);
+  svg2.append("g")
+    .call(d3.axisLeft(y));
+
+
+    svg2.selectAll("mybar")
+  .data(data)
+  .enter()
+  .append("rect")
+    .attr("x", function(d) { return x(d.Year); })
+    .attr("y", function(d) { return y(0); })
+    .attr("width",5)
+    .attr("height", function(d) { return y(d.GDP); })
+    .attr("fill", "#69b3a2")
+
+    svg2.append("text")
+.text("Fiscal deficit % GDP over time")
+.attr("font-style", "italic")
+.attr("x", width/5)
+.attr("y", 450);
+
+
+});
+
+var holdings2018 = [
+    {group: "RBI", value: 627317},
+    {group: "commercial banks", value: 2303513},
+    {group: "Co-operative banks", value: 138711},
+    {group: "Primary dealers", value: 15601 },
+    {group: "Insurance companies", value: 1267799},
+    {group: "Financial Institutions", value: 48827},
+    {group: "Mutual funds", value: 53801},
+    {group: "Provident funds", value: 317467 },
+    {group: "Corporates", value: 48877},
+    {group: "Foreign Portfolios", value: 234876},
+    {group: "Others", value: 339989 },
+    {group: "State governments", value:104516 },
+];
+
+var holdings2019 = [
+    {group: "RBI", value: 903961},
+    {group: "commercial banks", value: 2384770},
+    {group: "Co-operative banks", value: 135335 },
+    {group: "Primary dealers", value: 18610 },
+    {group: "Insurance companies", value: 1441008 },
+    {group: "Financial Institutions", value: 62071},
+    {group: "Mutual funds", value: 20637 },
+    {group: "Provident funds", value: 324042},
+    {group: "Corporates", value: 57413 },
+    {group: "Foreign Portfolios", value: 190566},
+    {group: "Others", value: 382613 },
+    {group: "State governments", value: 118707},
+];
+
+var holdings2020 = [
+    {group: "RBI", value: 979404 },
+    {group: "commercial banks", value: 2580942},
+    {group: "Co-operative banks", value: 123114  },
+    {group: "Primary dealers", value:25016  },
+    {group: "Insurance companies", value: 1627147 },
+    {group: "Financial Institutions", value: 34169 },
+    {group: "Mutual funds", value: 92571 },
+    {group: "Provident funds", value: 305969},
+    {group: "Corporates", value: 52589 },
+    {group: "Foreign Portfolios", value: 158229},
+    {group: "Others", value: 507434},
+    {group: "State governments", value: 132672},
+];
+
+
+
+var svg3 = d3.select("#debtchart3")
+.append("svg")
+    .attr("width", width + margin.left + margin.right + 100)
+    .attr("height", height + margin.top + margin.bottom + 100)
+    .attr("viewBox", "0 0 500 500")
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+var x = d3.scaleBand()
+  .range([ 0, width ])
+  .domain(holdings2018.map(function(d) { return d.group; }))
+  .padding(0.2);
+svg3.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text") 
+  .attr("transform", "translate(10,60)rotate(90)")
+  .attr("font-size", 12)
+    .style("text-anchor", "middle");
+
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, 3000000])
+  .range([ height, 0]);
+svg3.append("g")
+  .attr("class", "myYaxis")
+  .call(d3.axisLeft(y));      
+
+  function update(data) {
+
+var u = svg3.selectAll("rect")
+  .data(data)
+
+u
+  .enter()
+  .append("rect")
+  .merge(u)
+  .transition()
+  .duration(1000)
+    .attr("x", function(d) { return x(d.group); })
+    .attr("y", function(d) { return y(d.value); })
+    .attr("width", 30)
+    .attr("height", function(d) { return height - y(d.value); })
+    .attr("fill", "#69b3a2")
+}
+
+update(holdings2018)
+
+var svg4 = d3.select("#debtchart4")
+.append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom+ 100)
+    .attr("viewBox", "0 0 500 500")
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.csv("https://raw.githubusercontent.com/ydunga/data/main/costofborrowing.csv", function(d){
+        return {date: d3.timeParse("%Y")(d.Year), min: d.min, max: d.max, avg: d.weightedavg}
+    }, 
+
+    function(data) {
+        var x = d3.scaleTime()
+  .domain(d3.extent(data, function(d) { return d.date; }))
+  .range([ 0, width ]);
+svg4.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x));
+
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([2, 16])
+  .range([ height, 0 ]); 
+svg4.append("g")
+  .call(d3.axisLeft(y));
+
+  svg4.append("path")
+  .datum(data)
+  .attr("fill", "none")
+  .attr("stroke", "#90be6d")
+  .attr("stroke-width", 3)
+  .attr("d", d3.line()
+    .x(function(d) { return x(d.date) })
+    .y(function(d) { return y(d.avg) })
+    );
+
+    svg4.append("path")
+  .datum(data)
+  .attr("fill", "none")
+  .attr("stroke", "#277da1")
+  .attr("stroke-width", 3)
+  .attr("d", d3.line()
+    .x(function(d) { return x(d.date) })
+    .y(function(d) { return y(d.min) })
+    );
+
+    svg4.append("path")
+  .datum(data)
+  .attr("fill", "none")
+  .attr("stroke", "#f9c74f")
+  .attr("stroke-width", 3)
+  .attr("d", d3.line()
+    .x(function(d) { return x(d.date) })
+    .y(function(d) { return y(d.max) })
+    );
+
+    svg4.append("circle").attr("cx", 160).attr("cy", 440). attr("r", 6).style("fill", "#90be6d").style("stroke", "black").style("stroke-width", 1);
+    svg4.append("circle").attr("cx", 160).attr("cy", 460). attr("r", 6).style("fill", "#277da1").style("stroke", "black").style("stroke-width", 1);
+    svg4.append("circle").attr("cx", 160).attr("cy", 480). attr("r", 6).style("fill", "#f9c74f").style("stroke", "black").style("stroke-width", 1);
+svg4.append("text").attr("x", 180).attr("y", 440).text("Weighted avg rate")
+svg4.append("text").attr("x", 180).attr("y", 460).text("Minimum")
+svg4.append("text").attr("x", 180).attr("y", 480).text("Maximum")
+
+
+    }
+    );
+
+    var svg5 = d3.select("#debtchart5")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("viewBox", "0 0 500 500")
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+          d3.csv("https://raw.githubusercontent.com/ydunga/data/main/gvsi.csv", function(d){
+              return {date: d3.timeParse("%Y")(d.Year), growth: d.g, interest : d.i}
+          }, 
+          
+          function(data){
+            var x = d3.scaleTime()
+  .domain(d3.extent(data, function(d) { return d.date; }))
+  .range([ 0, width ]);
+svg5.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x));
+
+// Add Y axis
+var y = d3.scaleLinear()
+  .domain([0, 25])
+  .range([ height, 0 ]); 
+svg5.append("g")
+  .call(d3.axisLeft(y));
+
+  svg5.append("path")
+  .datum(data)
+  .attr("fill", "none")
+  .attr("stroke", "#90be6d")
+  .attr("stroke-width", 3)
+  .attr("d", d3.line()
+    .x(function(d) { return x(d.date) })
+    .y(function(d) { return y(d.growth) })
+    );
+
+    svg5.append("path")
+  .datum(data)
+  .attr("fill", "none")
+  .attr("stroke", "#f9c74f")
+  .attr("stroke-width", 3)
+  .attr("d", d3.line()
+    .x(function(d) { return x(d.date) })
+    .y(function(d) { return y(d.interest) })
+    );
+
+    svg5.append("circle").attr("cx", 160).attr("cy", 440). attr("r", 6).style("fill", "#90be6d").style("stroke", "black").style("stroke-width", 1);
+    svg5.append("circle").attr("cx", 160).attr("cy", 460). attr("r", 6).style("fill", "#f9c74f").style("stroke", "black").style("stroke-width", 1);
+svg5.append("text").attr("x", 180).attr("y", 440).text("Nominal growth rate")
+svg5.append("text").attr("x", 180).attr("y", 460).text("Nominal interest rate")
+
+
+          }
+          
+          
+          
+          
+          
+          
+          )
+         
+
+
+    </script>
+</body>
+</html>

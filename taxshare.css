@@ -1,0 +1,78 @@
+h1 {
+    text-align: center;
+}
+
+h3, p { 
+    text-align: center;
+}
+
+body { 
+    background-color: #f6f4d2;
+    padding: 30px;
+}
+
+svg, button { 
+    margin-left: auto;
+    margin-right: auto;
+    display : block;
+   
+   
+}
+
+a {
+    text-align: center;
+    background-color: #cbdfbd ;
+    font-size: 20px;
+    border: 1px solid black;
+    padding: 14px 25px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+
+}
+  
+  /* This controls the Chart Title */
+  text .title{
+    font-size: 16px;
+  }
+  
+  /* This controls the axis text size */
+  .axis text {
+    font-size: 8px;
+  }
+  
+  div {
+      margin-right: auto;
+      margin-left: auto;
+
+  }
+
+  .container, .container2 {
+      display: grid;
+      grid-template-columns: repeat(2, 500px);
+      grid-gap: 10px;
+      justify-content: center;
+      align-content: center;
+  }
+
+  #container-id1, #container-id2, #container2-1, #container2-2 {
+      width: 500px;
+      height: 500px;
+      justify-self: center;
+    
+  }
+
+  table, th, td {
+      
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+    text-align: center;
+
+  }
+
+  table { 
+      margin-left: auto;
+      margin-right: auto;
+  }
+ 
